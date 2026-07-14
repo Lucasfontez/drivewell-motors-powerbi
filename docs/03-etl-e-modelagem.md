@@ -50,17 +50,25 @@ Criada do zero no Power Query, com M:
 
 ```m
 let
-    DataInicio = #date(2022, 1, 1),
-    DataFim = #date(2023, 12, 31),
-    Dias = Duration.Days(DataFim - DataInicio) + 1,
-    Lista = List.Dates(DataInicio, Dias, #duration(1,0,0,0)),
-    Tabela = Table.FromList(Lista, Splitter.SplitByNothing(), {"Data"}),
-    Tipada = Table.TransformColumnTypes(Tabela, {{"Data", type date}}),
-    Ano = Table.AddColumn(Tipada, "Ano", each Date.Year([Data]), Int64.Type),
-    NumMes = Table.AddColumn(Ano, "NumMes", each Date.Month([Data]), Int64.Type),
-    NomeMes = Table.AddColumn(NumMes, "NomeMesAbreviado", each Date.ToText([Data], "MMM"), type text)
+    Fonte = fVendas[Data],
+    DataMin = Date.StartOfYear( List.Min( Fonte ) ),
+    DataMax = Date.EndOfYear( List.Max( Fonte ) ),
+    QtdeDias = Duration.Days( DataMax - DataMin ) + 1,
+    ListDates = List.Dates(DataMin, QtdeDias, #duration(1,0,0,0)),
+    ParaTabela = Table.FromList(ListDates, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
+    NomeDiaInserido = Table.AddColumn(ParaTabela, "NomeDia", each Text.BeforeDelimiter( Date.DayOfWeekName([Column1]), "-"), type text),
+    NomeMesInserido = Table.AddColumn(NomeDiaInserido, "NomeMes", each Date.MonthName([Column1]), type text),
+    MesAbreviadoInserido = Table.AddColumn(NomeMesInserido, "NomeMesAbreviado", each Text.Start([NomeMes], 3), type text),
+    SemanaMesInserida = Table.AddColumn(MesAbreviadoInserido, "SemanaMes", each "0" & Text.From( Date.WeekOfMonth([Column1]) ) & " - Sem", type text),
+    SemanaAnoInserida = Table.AddColumn(SemanaMesInserida, "SemanaAno", each Text.PadStart( Text.From( Date.WeekOfYear([Column1]) ), 2, "0") & " - Sem", type text),
+    NumMesInserido = Table.AddColumn(SemanaAnoInserida, "NumMes", each Date.Month([Column1]), Int64.Type),
+    AnoInserido = Table.AddColumn(NumMesInserido, "Ano", each Date.Year([Column1]), Int64.Type),
+    MesAnoInserido = Table.AddColumn(AnoInserido, "MesAno", each Text.Combine({[NomeMesAbreviado], Text.From([Ano], "pt-BR")}, " - "), type text),
+    ColunasRenomeadas = Table.RenameColumns(MesAnoInserido,{{"Column1", "Data"}}),
+    TipoAlterado = Table.TransformColumnTypes(ColunasRenomeadas,{{"Data", type date}}),
+    PrimMaiuscula = Table.TransformColumns(TipoAlterado,{{"NomeDia", Text.Proper, type text}, {"NomeMes", Text.Proper, type text}, {"NomeMesAbreviado", Text.Proper, type text}, {"MesAno", Text.Proper, type text}})
 in
-    Tipada
+    PrimMaiuscula
 ```
 
 **Detalhe que quebra e ninguém lembra:** `NomeMesAbreviado` é texto, então o Power BI ordena alfabeticamente — *abr, ago, dez, fev...*. Precisa marcar a coluna para **Classificar por `NumMes`**, senão o gráfico de linhas fica sem sentido.

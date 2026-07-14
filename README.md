@@ -9,15 +9,11 @@ Dashboard de vendas para uma rede de concessionárias multi-regional. Descobri q
 **🔗 [Ver dashboard ao vivo](https://app.powerbi.com/view?r=eyJrIjoiNjE4ZWU3MTUtMzdlOS00ZmMxLWFlYTMtMjcxNGExNWE4ZGYyIiwidCI6ImU4MmU1OWEwLWY0YTAtNDNmMC1iM2E5LTIwMDZjNjdmMGQ2NiJ9)** · publicado no Power BI Service
 
 ---
-
 ## 🎥 Preview
 
-![Visão Executiva](assets/pagina-1-visao-executiva.png)
-
-| Concessionárias
-|:---:|
-
-![][Concessionárias](assets/pagina-2-concessionarias.png)
+| Visão Executiva | Concessionárias |
+|:---:|:---:|
+| ![Visão Executiva](assets/pagina-1-visao-executiva.png) | ![Concessionárias](assets/pagina-2-concessionarias.png) |
 
 ---
 

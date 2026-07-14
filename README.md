@@ -142,5 +142,4 @@ Não são desculpas — são os limites que eu enxergo do trabalho, e o que fari
 
 ## Autor
 
-**Lucas Souza Fontes Caminha**
-[LinkedIn — preencher] · [GitHub — preencher]
+**Autor:** Lucas Fontes · 🔗 [GitHub](https://github.com/Lucasfontez) · [LinkedIn](https://www.linkedin.com/in/lucassfontesc/)

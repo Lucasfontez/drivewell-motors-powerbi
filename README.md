@@ -6,7 +6,7 @@ Dashboard de vendas para uma rede de concessionárias multi-regional. Descobri q
 ![Power BI](https://img.shields.io/badge/Power%20BI-DAX-F2C811?style=flat-square&logo=powerbi&logoColor=black)
 ![Modelagem](https://img.shields.io/badge/Modelagem-Star%20Schema-4A7FB5?style=flat-square)
 
-**🔗 [Ver dashboard ao vivo]((https://app.powerbi.com/view?r=eyJrIjoiNjE4ZWU3MTUtMzdlOS00ZmMxLWFlYTMtMjcxNGExNWE4ZGYyIiwidCI6ImU4MmU1OWEwLWY0YTAtNDNmMC1iM2E5LTIwMDZjNjdmMGQ2NiJ9))** · publicado no Power BI Service
+**🔗 [Ver dashboard ao vivo](https://app.powerbi.com/view?r=eyJrIjoiNjE4ZWU3MTUtMzdlOS00ZmMxLWFlYTMtMjcxNGExNWE4ZGYyIiwidCI6ImU4MmU1OWEwLWY0YTAtNDNmMC1iM2E5LTIwMDZjNjdmMGQ2NiJ9)** · publicado no Power BI Service
 
 ---
 
@@ -100,7 +100,8 @@ Todos os números do Power BI foram **validados contra o Excel**. Receita total:
 │   ├── 03-etl-e-modelagem.md           Power Query, star schema, o bug da dimensão
 │   ├── 04-medidas-dax.md               as 8 medidas, uma a uma, com a decisão por trás
 │   ├── 05-analise.md                   os achados e como cheguei neles
-│   └── 06-decisoes-e-aprendizados.md   o que caiu, os tropeços, o que eu faria diferente
+│   ├── 06-decisoes-e-aprendizados.md   o que caiu, os tropeços, o que eu faria diferente
+│   └── 07-dashboard.md                 cada visual e por que ele está lá
 ├── powerbi/
 │   └── Análise de Vendas — DriveWell Motors.pbix
 └── assets/
@@ -108,6 +109,22 @@ Todos os números do Power BI foram **validados contra o Excel**. Receita total:
     ├── pagina-2-concessionarias.png
     └── backgrounds/                    os planos de fundo do dashboard
 ```
+
+---
+
+## Próximos passos
+
+Não são desculpas — são os limites que eu enxergo do trabalho, e o que faria a diferença se ele continuasse.
+
+**Investigar Buddy Storbeck's em campo.** O dashboard aponta o dedo (7,5% de crescimento contra 23,6% da rede), mas a *causa* não está nos dados. Faltam headcount, estoque, tempo de operação, mix por loja. Nenhum painel resolve isso — precisa de entrevista.
+
+**Trazer custo e margem.** Toda a análise é de receita. "Cadillac tem ticket de $42 mil" não significa "Cadillac é mais lucrativa". Sem margem, o achado do segmento premium é uma hipótese comercial, não uma conclusão financeira.
+
+**Modelar meta por loja, não por rede.** A meta de +20% é uma régua única para 28 concessionárias de portes diferentes. Uma loja pequena crescer 20% e uma grande crescer 20% não têm o mesmo custo. Uma meta ponderada por base instalada seria mais justa — e mais útil.
+
+**Quebrar o vale de jan–ago.** Sei *que* existe. Não sei *por quê*. É sazonalidade de mercado (todo mundo compra carro no fim do ano) ou é uma falha comercial da rede? Comparar com dados de mercado responderia — e a resposta muda completamente a ação.
+
+**Automatizar o refresh.** Hoje o pipeline é manual. Publicar no Service com gateway e agendamento tornaria o painel operacional, não apenas demonstrativo.
 
 ---
 

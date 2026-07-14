@@ -10,10 +10,10 @@ Dashboard de vendas para uma rede de concessionárias multi-regional. Descobri q
 
 ---
 
-## Preview
+## 🎥 Preview
 
-![Página 1 — Visão Executiva](assets/pagina-1-visao-executiva.png)
-![Página 2 — Concessionárias](assets/pagina-2-concessionarias.png)
+![Visão Executiva](assets/pagina-1-visao-executiva.png)
+![Concessionárias](assets/pagina-2-concessionarias.png)
 
 ---
 

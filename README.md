@@ -2,10 +2,6 @@
 
 Dashboard de vendas para uma rede de concessionárias multi-regional. Descobri que o crescimento anunciado de 23,6% era enganoso — e que o problema da rede não era regional, era de uma loja específica.
 
-![Excel](https://img.shields.io/badge/Excel-Power%20Query-217346?style=flat-square&logo=microsoft-excel&logoColor=white)
-![Power BI](https://img.shields.io/badge/Power%20BI-DAX-F2C811?style=flat-square&logo=powerbi&logoColor=black)
-![Modelagem](https://img.shields.io/badge/Modelagem-Star%20Schema-4A7FB5?style=flat-square)
-
 **🔗 [Ver dashboard ao vivo](https://app.powerbi.com/view?r=eyJrIjoiNjE4ZWU3MTUtMzdlOS00ZmMxLWFlYTMtMjcxNGExNWE4ZGYyIiwidCI6ImU4MmU1OWEwLWY0YTAtNDNmMC1iM2E5LTIwMDZjNjdmMGQ2NiJ9)** · publicado no Power BI Service
 
 ---

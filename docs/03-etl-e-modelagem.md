@@ -1,15 +1,15 @@
-# 03 — ETL e Modelagem
+# 03, ETL e Modelagem
 
-## Power Query — as etapas
+## Power Query, as etapas
 
 Todas as transformações foram feitas no Power Query, em etapas reprodutíveis. Nada de célula editada na mão: se o dado mudar, o pipeline roda de novo.
 
 1. **Importação** do CSV
 2. **Correção do encoding** no campo `Motor` (ver [`02`](02-dados-e-profiling.md))
 3. **Renomeação** de colunas para português e padrão consistente
-4. **Tipagem** explícita — data como data, valores como número decimal
-5. **Tratamento de nulos** — verificados e resolvidos
-6. **Coluna de Faixa de Renda** — criada com cortes por quartil
+4. **Tipagem** explícita, data como data, valores como número decimal
+5. **Tratamento de nulos**: verificados e resolvidos
+6. **Coluna de Faixa de Renda**: criada com cortes por quartil
 7. **Criação das dimensões** por referência à tabela fato
 
 ## O modelo estrela
@@ -25,7 +25,7 @@ Todas as transformações foram feitas no Power Query, em etapas reprodutíveis.
 
 | Tabela | Linhas | Papel |
 |---|---|---|
-| `fVendas` | 23.906 | Fato — uma linha por venda |
+| `fVendas` | 23.906 | Fato, uma linha por venda |
 | `dCalendario` | ~730 | Dimensão de tempo |
 | `dVeiculos` | — | Marca, modelo, motor, transmissão, cor, carroceria |
 | `dConcessionaria` | **28** | Nome da loja |
@@ -36,13 +36,13 @@ Todas as transformações foram feitas no Power Query, em etapas reprodutíveis.
 
 Esta é a decisão de modelagem menos óbvia do projeto, e a que mais rende pergunta.
 
-A intuição diz: *"região é atributo de loja, coloque na dimensão de concessionária"*. **Está errado** — e eu só descobri porque investiguei.
+A intuição diz: *"região é atributo de loja, coloque na dimensão de concessionária"*. **Está errado**: e eu só descobri porque investiguei.
 
 Neste dataset, **todas as 28 concessionárias vendem em todas as 7 regiões**. Não existe hierarquia geográfica. Uma loja não *tem* uma região; ela vende em várias.
 
 Portanto, `Região` é atributo da **venda**, não da **loja**. Ela fica no fato, como dimensão degenerada.
 
-Criar uma `dRegiao` separada seria tecnicamente possível, mas não traria ganho nenhum — só complexidade. A regra que segui: **não normalize o que não tem hierarquia.**
+Criar uma `dRegiao` separada seria tecnicamente possível, mas não traria ganho nenhum, só complexidade. A regra que segui: **não normalize o que não tem hierarquia.**
 
 ### A dCalendario
 
@@ -50,25 +50,17 @@ Criada do zero no Power Query, com M:
 
 ```m
 let
-    Fonte = fVendas[Data],
-    DataMin = Date.StartOfYear( List.Min( Fonte )),
-    DataMax = Date.EndOfYear( List.Max( Fonte )),
-    QtdeDias = Duration.Days( DataMax - DataMin ) + 1,
-    ListDates = List.Dates(DataMin, QtdeDias, #duration(1,0,0,0)),
-    ParaTabela = Table.FromList(ListDates, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
-    NomeDiaInserido = Table.AddColumn(ParaTabela, "NomeDia", each Text.BeforeDelimiter( Date.DayOfWeekName([Column1]), "-"), type text),
-    NomeMesInserido = Table.AddColumn(NomeDiaInserido, "NomeMes", each Date.MonthName([Column1]), type text),
-    MesAbreviadoInserido = Table.AddColumn(NomeMesInserido, "NomeMesAbreviado", each Text.Start([NomeMes], 3), type text),
-    SemanaMesInserida = Table.AddColumn(MesAbreviadoInserido, "SemanaMes", each "0" & Text.From( Date.WeekOfMonth([Column1]) ) & " - Sem", type text),
-    SemanaAnoInserida = Table.AddColumn(SemanaMesInserida, "SemanaAno", each Text.PadStart( Text.From( Date.WeekOfYear([Column1]) ), 2, "0") & " - Sem", type text),
-    NumMesInserido = Table.AddColumn(SemanaAnoInserida, "NumMes", each Date.Month([Column1]), Int64.Type),
-    AnoInserido = Table.AddColumn(NumMesInserido, "Ano", each Date.Year([Column1]), Int64.Type),
-    MesAnoInserido = Table.AddColumn(AnoInserido, "MesAno", each Text.Combine({[NomeMesAbreviado], Text.From([Ano], "pt-BR")}, " - "), type text),
-    ColunasRenomeadas = Table.RenameColumns(MesAnoInserido,{{"Column1", "Data"}}),
-    TipoAlterado = Table.TransformColumnTypes(ColunasRenomeadas,{{"Data", type date}}),
-    PrimMaiuscula = Table.TransformColumns(TipoAlterado,{{"NomeDia", Text.Proper, type text}, {"NomeMes", Text.Proper, type text}, {"NomeMesAbreviado", Text.Proper, type text}, {"MesAno", Text.Proper, type text}})
+    DataInicio = #date(2022, 1, 1),
+    DataFim = #date(2023, 12, 31),
+    Dias = Duration.Days(DataFim - DataInicio) + 1,
+    Lista = List.Dates(DataInicio, Dias, #duration(1,0,0,0)),
+    Tabela = Table.FromList(Lista, Splitter.SplitByNothing(), {"Data"}),
+    Tipada = Table.TransformColumnTypes(Tabela, {{"Data", type date}}),
+    Ano = Table.AddColumn(Tipada, "Ano", each Date.Year([Data]), Int64.Type),
+    NumMes = Table.AddColumn(Ano, "NumMes", each Date.Month([Data]), Int64.Type),
+    NomeMes = Table.AddColumn(NumMes, "NomeMesAbreviado", each Date.ToText([Data], "MMM"), type text)
 in
-    PrimMaiuscula
+    Tipada
 ```
 
 **Detalhe que quebra e ninguém lembra:** `NomeMesAbreviado` é texto, então o Power BI ordena alfabeticamente — *abr, ago, dez, fev...*. Precisa marcar a coluna para **Classificar por `NumMes`**, senão o gráfico de linhas fica sem sentido.
@@ -85,7 +77,7 @@ Construí a `dConcessionaria` do jeito óbvio: referenciei o fato, mantive `Cod_
 
 **Resultado: 7 linhas.**
 
-Eu aceitei. Sete concessionárias parecia plausível — afinal, eram sete regiões.
+Eu aceitei. Sete concessionárias parecia plausível, afinal, eram sete regiões.
 
 ### O que estava errado
 
@@ -99,14 +91,14 @@ Códigos distintos (Cod_Concessionaria): 7
 Regiões distintas: 7
 ```
 
-**`Cod_Concessionaria` não identifica a loja. Ele identifica a região.** São 7 códigos para 7 regiões — um código regional com nome enganoso.
+**`Cod_Concessionaria` não identifica a loja. Ele identifica a região.** São 7 códigos para 7 regiões, um código regional com nome enganoso.
 
 Quando removi duplicatas por esse código, o Power Query colapsou 28 lojas em 7 linhas, mantendo um nome arbitrário para cada grupo. **A dimensão estava silenciosamente errada, e qualquer análise por concessionária estaria mentindo.**
 
 ### A correção
 
 ```m
-// dConcessionaria — a chave é o NOME, não o código
+// dConcessionaria, a chave é o NOME, não o código
 let
     Fonte = fVendas,
     SoNome = Table.SelectColumns(Fonte, {"Concessionaria"}),
@@ -138,4 +130,4 @@ O modelo só foi aceito depois de bater com o Excel:
 | Carros Vendidos | 23.906 | ✅ |
 | Crescimento 2023 | +23,6% | ✅ |
 
-Se não batesse, o erro estaria no modelo — não na fórmula.
+Se não batesse, o erro estaria no modelo, não na fórmula.

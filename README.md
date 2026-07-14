@@ -6,7 +6,7 @@ Dashboard de vendas para uma rede de concessionárias multi-regional. Descobri q
 ![Power BI](https://img.shields.io/badge/Power%20BI-DAX-F2C811?style=flat-square&logo=powerbi&logoColor=black)
 ![Modelagem](https://img.shields.io/badge/Modelagem-Star%20Schema-4A7FB5?style=flat-square)
 
-**🔗 [Ver dashboard ao vivo]([https://app.powerbi.com/view?r=eyJrIjoiMGZiYzBlNWItNzBlNi00OTVhLTk4ZDgtOGMxNDI0MmQwYzdmIiwidCI6ImU4MmU1OWEwLWY0YTAtNDNmMC1iM2E5LTIwMDZjNjdmMGQ2NiJ9](https://app.powerbi.com/view?r=eyJrIjoiNjE4ZWU3MTUtMzdlOS00ZmMxLWFlYTMtMjcxNGExNWE4ZGYyIiwidCI6ImU4MmU1OWEwLWY0YTAtNDNmMC1iM2E5LTIwMDZjNjdmMGQ2NiJ9))** · publicado no Power BI Service
+**🔗 [Ver dashboard ao vivo]((https://app.powerbi.com/view?r=eyJrIjoiNjE4ZWU3MTUtMzdlOS00ZmMxLWFlYTMtMjcxNGExNWE4ZGYyIiwidCI6ImU4MmU1OWEwLWY0YTAtNDNmMC1iM2E5LTIwMDZjNjdmMGQ2NiJ9))** · publicado no Power BI Service
 
 ---
 
